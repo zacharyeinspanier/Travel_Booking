@@ -1,0 +1,10 @@
+This app will be able to search for flights and hotels in a given location.
+
+Components:
+    1: flight location
+    2: dates
+    3: select flight
+    4: select hotels
+
+Use public api to search for flights
+Use public api to search for hotels. 
