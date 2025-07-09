@@ -1,0 +1,20 @@
+{
+  "name": "travel_booking",
+  "version": "1.0.0",
+  "description": "Web Application to book flights and hotels.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zacharyeinspanier/Travel_Booking.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zacharyeinspanier/Travel_Booking/issues"
+  },
+  "homepage": "https://github.com/zacharyeinspanier/Travel_Booking#readme"
+}
