@@ -2,7 +2,7 @@
   "name": "travel_booking",
   "version": "1.0.0",
   "description": "Web Application to book flights and hotels.",
-  "main": "index.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
