@@ -3,25 +3,4 @@ This app will be able to search for flights and hotels in a given location.
 At the momnet this will be a single page web app. 
 With search bar, dates, and results list items. 
 
-Implement:
-    1: destination search bar
-    2: calendar dates
-    3: option for one way
-    4: display list
-    5: css for display list 
-    6: Option for flights only
-    7: option for hotels only
-    8: option for flights & hotels. 
 
-Assumptions:
-    Use public api to search for flights.
-        Back end will send query.
-    Use public api to search for hotels. 
-        Back end will send query.
-    Backend will be responsible for quereying the api's.
-        Backend will post api response to front end.
-    Frondend will Get reqested data to backend
-        Frontend will display data in a user readable format. 
-
-Questions:
-    1: Will I need to send frontend java script to browser?

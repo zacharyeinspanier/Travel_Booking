@@ -1,0 +1,16 @@
+
+<h2> Search for a Flight</h2>
+<form action="/search_for_flights" method="POST">
+    <label>Origin: </label>
+    <input type="text" placeholder="Origin" name="origin">
+    <label>Destination: </label>
+    <input type="text" placeholder="Destination" name="destination">
+    <!-- TODO: Send  min and max date values via locals-->
+    <label>Start Date: </label>
+    <input type="date" id="start" name="start" value="2018-07-22" min="2018-01-01" />
+    <label>Return Date: </label>
+    <input type="date" id="return" name="return" value="2018-07-22" min="2018-01-01" />
+    <label>One Way: </label>
+    <input type="radio" name="one-way">
+    <input type="Submit" value="Search"/>
+</form>

@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/zacharyeinspanier/Travel_Booking#readme",
   "dependencies": {
+    "body-parser": "^2.2.0",
+    "ejs": "^3.1.10",
     "express": "^5.1.0",
     "path": "^0.12.7",
     "url": "^0.11.4"
