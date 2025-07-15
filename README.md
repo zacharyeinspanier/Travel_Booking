@@ -5,10 +5,16 @@ This is a travel booking app. Purchases are unavalible.
 Download & Install Node.js (skip if already installer)
 - Node.js: https://nodejs.org/en 
 
-To install dependacies run to command:  `npm install`
+To install dependacies run to command: 
+
+1. `npm install`
+2. Create file `.env`
+3. enter amadeus api key and scret
+4. `source .env`
 
 ## List of Node Dependencies
 - express
 - path
 - url
 - ejs
+- amadeus
