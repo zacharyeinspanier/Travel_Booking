@@ -2,10 +2,9 @@
 <form action="/search_for_hotels" method="POST">
     <label>Locaton: </label>
     <input type="text" placeholder="Location" name="location">
-    <!-- TODO: Send  min and max date values via locals-->
     <label>Start Date: </label>
-    <input type="date" id="start" name="start" value="2018-07-22" min="2018-01-01" />
+    <input type="date" id="start" name="hotelCheckInDate" value=<%= locals.hotelCheckInDate %> min=<%= locals.todayDate %> />
     <label>End Date: </label>
-    <input type="date" id="end" name="end" value="2018-07-22" min="2018-01-01" />
+    <input type="date" id="end" name="hotelCheckOutDate" value=<%= locals.hotelCheckOutDate %> min=<%= locals.todayDate %> />
     <input type="Submit" value="Search"/>
 </form>
