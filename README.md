@@ -8,13 +8,8 @@ Download & Install Node.js (skip if already installer)
 To install dependacies run to command: 
 
 1. `npm install`
+2. download jquery-ui-1.14.1 and move directory to project directory. 
 2. Create file `.env`
 3. enter amadeus api key and scret
 4. `source .env`
 
-## List of Node Dependencies
-- express
-- path
-- url
-- ejs
-- amadeus

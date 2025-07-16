@@ -1,68 +1,83 @@
-// will likley need to send information to the back end and qait for a reply
-let typingInput;
+// Exteranl resources: https://github.com/bassjobsen/Bootstrap-3-Typeahead
 
-var cityNames = [];
-// 1: wait for user to finish typing
-// 2: async/await query api
-// 3: populate search box
+let typingInputFlightOriginInput;
+let typingInputFlightDestinationInput;
 
-$("#flightOriginInput").keypress(async function(event){
-    clearTimeout(typingInput);
-    typingInput = setTimeout(async function(){
-        var flightOriginInput = $("#flightOriginInput").val();
-        if(flightOriginInput != ''){
-            var cities = await search_matching_cities(flightOriginInput);
-            var cities_formatted = format_city_names(cities);
-            $("#searchResultsOriginDivUL").children().remove();
-            $("#searchResultsOriginDivUL").append(cities_formatted);
-        }
+// Bootstrap TypeAhead is used for search bar auto completes
+// An async function is use as the source 
+$("#flightOriginInput").typeahead({
+  source: async function (query, process) {
+    // Wait 500ms before calling search_matching_cities
+    clearTimeout(typingInputFlightOriginInput);
+    typingInputFlightOriginInput = setTimeout(async function () {
+      var cities = await search_matching_cities(query);
+      var cities_formatted = format_city_names_typeahead(cities);
+       // use process var to async return results
+      return process(cities_formatted);
     }, 500);
-   
+    return;
+  },
 });
 
-$("#flightDestinationInput").keypress(function(event){
-    clearTimeout(typingInput);
-    typingInput = setTimeout(async function(){
-        var flightDestinationInput = $("#flightDestinationInput").val();
-        if(flightDestinationInput != ''){
-            var cities = await search_matching_cities(flightDestinationInput);
-            var cities_formatted = format_city_names(cities);
-            $("#searchResultsDestinationUL").children().remove();
-            $("#searchResultsDestinationUL").append(cities_formatted);
-        }
-        
+$("#flightDestinationInput").typeahead({
+  source: async function (query, process) {
+    // Wait 500ms before calling search_matching_cities
+    clearTimeout(typingInputFlightDestinationInput);
+    typingInputFlightDestinationInput = setTimeout(async function () {
+      var cities = await search_matching_cities(query);
+      var cities_formatted = format_city_names_typeahead(cities);
+      // use process var to async return results
+      return process(cities_formatted);
     }, 500);
+
+    return;
+  },
 });
 
+$("#oneWayFlight").on("change", function () {
+  if ($("#oneWayFlight").is(":checked")) {
+    $("#flightReturnDate").prop("disabled", true);
+  } else {
+    $("#flightReturnDate").prop("disabled", false);
+  }
+});
 
-async function search_matching_cities(city_name){
-    const params = new URLSearchParams();
-    params.append("name", city_name);
+async function search_matching_cities(city_name) {
+  const params = new URLSearchParams();
+  params.append("name", city_name);
 
-    try{
-        const matching_city_names =  await fetch(`/search/cityairports?${params}`);
+  try {
+    const matching_city_names = await fetch(`/search/cityairports?${params}`);
 
-        if (!matching_city_names.ok) {
-            throw new Error(`Response status: ${matching_city_names.status}`);
-          }
-
-        const data = await matching_city_names.json();
-        return data
-    } catch (error){
-        console.log(error);
+    if (!matching_city_names.ok) {
+      throw new Error(`Response status: ${matching_city_names.status}`);
     }
+
+    const data = await matching_city_names.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-function format_city_names(results){
-    if (results){
-        const content= results.map((item) =>{
-            //if item is AIRPORT
-            if(item.subType == "AIRPORT"){
-                return "<li>" + item.address.cityName + " (" + item.iataCode  + ")" + "</li>"
-            }
-        });
-        return content;
-    }
-    return "";
+function format_city_names_typeahead(results) {
+  if (results) {
+    const content = results
+      .map((item) => {
+        //if item is AIRPORT
+        if (item.subType == "AIRPORT") {
+          return `${item.address.cityName} (${item.iataCode})`;
+        }
+      })
+      .filter((item) => {
+        // map introduces undefined values if nothing is retured
+        // filter undefined values
+        if (item != undefined) {
+          return true;
+        }
+        return false;
+      });
+    return content;
+  }
+  return [];
 }
-  

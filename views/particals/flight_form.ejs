@@ -1,26 +1,42 @@
 
 <h2> Search for a Flight</h2>
-<!--  travelers -->
-<form action="/search_for_flights" method="POST">
-    <div class="search-container">
-        <label for="flightOriginInput">Origin: </label>
-        <input type="text" placeholder="Origin" name="origin" id="flightOriginInput">
-        <div id="searchResultsOriginDiv">
-            <ul id="searchResultsOriginDivUL"></ul>
-        </div> 
+<!--  travelers 
+
+-->
+<form class="p-5" action="/search_for_flights" method="POST">
+
+    <!-- Check box for One Way Flights-->
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="oneWayFlight" name="one_way">
+            <label class="form-check-label" for="oneWayFlight">One Way</label>
+        </div>
     </div>
-    <div class="search-container">
-        <label for="flightDestinationInput">Destination: </label>
-        <input type="text" placeholder="Destination" name="destination" id="flightDestinationInput">
-        <div id="searchResultsDestinationDiv">
-            <ul id="searchResultsDestinationUL"></ul>
-        </div> 
+
+    <!-- Row for origin flight location and date-->
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="flightOriginInput">Origin</label>
+            <input type="text" class="form-control typeahead" data-provide="typeahead"  placeholder="Origin" name="origin" id="flightOriginInput" >
+        </div>
+        <div class="form-group col-md-6">
+            <label>Start Date</label>
+            <input type="date" class="form-control" id="flightDepartureDate" name="flightDepartureDate" value=<%= locals.flightDepartureDate %>  min= <%= locals.todayDate %> />
+        </div>
+ 
     </div>
-    <label>Start Date: </label>
-    <input type="date" id="start" name="flightDepartureDate" value=<%= locals.flightDepartureDate %>  min= <%= locals.todayDate %> />
-    <label>Return Date: </label>
-    <input type="date" id="return" name="flightReturnDate" value=<%= locals.flightReturnDate %>  min= <%= locals.todayDate %> />
-    <label>One Way: </label>
-    <input type="radio" name="one_way">
-    <input type="Submit" value="Search"/>
+
+    <!-- Row for destination location and date -->
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label class="col-form-label">Destination</label>
+            <input type="text" class="form-control" placeholder="Destination" name="destination" id="flightDestinationInput">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="flightReturnDate">Return Date</label>
+            <input type="date" class="form-control" id="flightReturnDate" name="flightReturnDate" value=<%= locals.flightReturnDate %>  min= <%= locals.todayDate %> />
+        </div>
+    </div>
+    
+    <input class="btn btn-primary float-right" type="Submit" value="Search"/>
 </form>
