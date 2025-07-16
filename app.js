@@ -3,6 +3,8 @@ import path from "path";
 import url from "url";
 import bodyParser from "body-parser";
 import amadeus from "amadeus";
+import { format_flight_form_request } from "./api_helpers.js";
+import fs from "fs";
 
 const app = express();
 const port = 3000;
@@ -54,6 +56,21 @@ app.get("/flights", (req, res) => {
   });
 });
 
+app.get('/search/cityairports', async (req, res) => {
+
+  try {
+    //Which cities or airports with req.query.name
+    const response = await amadeus_api.referenceData.locations.get({
+      keyword: req.query.name,
+      subType: amadeus.location.any,
+    });
+      return res.json(response.data);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error.message);
+  }
+});
+
 app.post("/search_for_flights", async (req, res) => {
   // 1: format data into object
   // 2: send request to api
@@ -63,55 +80,24 @@ app.post("/search_for_flights", async (req, res) => {
   // 1: Resuls for origin -> destination
   // 2: User selects flight
   // 3: results for  destination -> origin
-  
-  var data = {};
-  data["currencyCode"] = "USD";
-  if (req.body.one - way == "ON") {
-    data["originDestinations"] = [
-      {
-        id: "1",
-        originLocationCode: req.body.origin,
-        destinationLocationCode: req.body.destination,
-        departureDateTime: {
-          date: req.body.flightDepartureDate,
-        },
-      },
-    ];
-  } else {
-    data["originDestinations"] = [
-      {
-        id: "1",
-        originLocationCode: req.body.origin,
-        destinationLocationCode: req.body.destination,
-        departureDateTime: {
-          date: req.body.flightDepartureDate,
-        },
-      },
-      {
-        id: "2",
-        originLocationCode: req.body.destination,
-        destinationLocationCode: req.body.origin,
-        departureDateTime: {
-          date: req.body.flightReturnDate,
-        },
-      },
-    ];
-  }
-  data["travelers"] = [
-    {
-      id: "1",
-      travelerType: "ADULT",
-    },
-  ];
-  data["sources"] = ["GDS"];
 
-  try {
-    const response =
-      await amadeus_api.shopping.availability.flightAvailabilities.post(data);
-    console.log(response);
-  } catch (error) {
-    console.error(error);
-  }
+  
+  //var data = format_flight_form_request(req);
+  //try {
+  //   const response =
+  //     await amadeus_api.shopping.flightOffersSearch.post(data);
+  //   //console.log(response.data);
+  //   // const jsonString = JSON.stringify(response.data, null, 2);
+  //   // fs.writeFile("./flightdata.json", jsonString, (err) => {
+  //   //   if (err) {
+  //   //     console.error('Error writing file:', err);
+  //   //   } else {
+  //   //     console.log(`Dictionary successfully written to ${filePath} as JSON.`);
+  //   //   }
+  //   // });
+  // } catch (error) {
+  //   console.error(error);
+  // }
   const now = new Date();
   res.render("flights.ejs", {
     todayDate: req.body.todayDate,
@@ -137,6 +123,7 @@ app.post("/search_for_hotels", async (req, res) => {
     hotelCheckOutDate: req.body.hotelCheckOutDate,
   });
 });
+
 
 app.listen(port, () => {
   console.log(`app started on port ${port}`);

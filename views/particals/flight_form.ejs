@@ -2,15 +2,25 @@
 <h2> Search for a Flight</h2>
 <!--  travelers -->
 <form action="/search_for_flights" method="POST">
-    <label>Origin: </label>
-    <input type="text" placeholder="Origin" name="origin">
-    <label>Destination: </label>
-    <input type="text" placeholder="Destination" name="destination">
+    <div class="search-container">
+        <label for="flightOriginInput">Origin: </label>
+        <input type="text" placeholder="Origin" name="origin" id="flightOriginInput">
+        <div id="searchResultsOriginDiv">
+            <ul id="searchResultsOriginDivUL"></ul>
+        </div> 
+    </div>
+    <div class="search-container">
+        <label for="flightDestinationInput">Destination: </label>
+        <input type="text" placeholder="Destination" name="destination" id="flightDestinationInput">
+        <div id="searchResultsDestinationDiv">
+            <ul id="searchResultsDestinationUL"></ul>
+        </div> 
+    </div>
     <label>Start Date: </label>
     <input type="date" id="start" name="flightDepartureDate" value=<%= locals.flightDepartureDate %>  min= <%= locals.todayDate %> />
     <label>Return Date: </label>
     <input type="date" id="return" name="flightReturnDate" value=<%= locals.flightReturnDate %>  min= <%= locals.todayDate %> />
     <label>One Way: </label>
-    <input type="radio" name="one-way">
+    <input type="radio" name="one_way">
     <input type="Submit" value="Search"/>
 </form>

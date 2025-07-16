@@ -4,3 +4,19 @@ At the momnet this will be a single page web app.
 With search bar, dates, and results list items. 
 
 
+The Flight Offers Search API searches over 400 airlines to find the cheapest flights for a given itinerary.
+The Amadeus Flight Availabilities Search API provides a list of flights with seats for sale on a given itinerary and the quantity of seats available in different fare classes
+
+
+
+
+TODO:
+    
+    2: search bar matches cities from entered name
+    3: validate origin and destination match airport codes
+    4: validate dates before querying api
+    5: add traveler data to from
+    6: filter api data
+    7: disaply api data in list
+    8: style web page
+    9: if no api key is prodived, start the app without it, and create some example data
