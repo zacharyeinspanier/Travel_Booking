@@ -1,18 +1,9 @@
 <%- include("particals/header.ejs") %>
 
-<%- include("particals/flight_form.ejs") %>
+<%- include("particals/flight_landing_page_form.ejs") %>
 
-<% if(locals.flight_results) { %>
-    <!-- TODO: page will be re-rendered with the search results: -->
-    <!-- TODO: iterate over search results and display each as a list item -->
-    <ul>
-        <li>Coffee</li>
-        <li>Tea</li>
-        <li>Milk</li>
-    </ul>
-<% } else { %>
-    <h2> no search results</h2>
-<% } %>
-
+<% if(locals.info_message) {%>
+    <p style="color:yellow;"><%= locals.info_message %></p>
+<%}%>
  
 <%- include("particals/footer.ejs") %>

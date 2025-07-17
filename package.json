@@ -19,6 +19,7 @@
   "homepage": "https://github.com/zacharyeinspanier/Travel_Booking#readme",
   "dependencies": {
     "amadeus": "^11.0.0",
+    "axios": "^1.10.0",
     "body-parser": "^2.2.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",

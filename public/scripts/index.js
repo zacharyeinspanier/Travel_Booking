@@ -1,37 +1,47 @@
-// Exteranl resources: https://github.com/bassjobsen/Bootstrap-3-Typeahead
-
-let typingInputFlightOriginInput;
-let typingInputFlightDestinationInput;
 
 // Bootstrap TypeAhead is used for search bar auto completes
-// An async function is use as the source 
+// An async function is use as the source
+// Link to documentation: https://github.com/bassjobsen/Bootstrap-3-Typeahead
 $("#flightOriginInput").typeahead({
   source: async function (query, process) {
-    // Wait 500ms before calling search_matching_cities
-    clearTimeout(typingInputFlightOriginInput);
-    typingInputFlightOriginInput = setTimeout(async function () {
-      var cities = await search_matching_cities(query);
+    $("#origin_iataCode").val(""); // clear previous iataCode 
+    var cities = await search_matching_cities(query);
+    if (cities) {
       var cities_formatted = format_city_names_typeahead(cities);
-       // use process var to async return results
+      // use process var to async return results
       return process(cities_formatted);
-    }, 500);
+    }
     return;
   },
+  displayText: function (item) {
+    return `${item.cityName} ${item.airportName} (${item.iataCode})`;
+  },
+  afterSelect: function(item){
+    $("#origin_iataCode").val(item.iataCode);
+  },
+  autoSelect: true,
+  delay: 500, // Wait 500ms before calling search_matching_cities
 });
 
 $("#flightDestinationInput").typeahead({
   source: async function (query, process) {
-    // Wait 500ms before calling search_matching_cities
-    clearTimeout(typingInputFlightDestinationInput);
-    typingInputFlightDestinationInput = setTimeout(async function () {
-      var cities = await search_matching_cities(query);
+    $("#destination_iataCode").val(""); // clear previous iataCode 
+    var cities = await search_matching_cities(query);
+    if (cities) {
       var cities_formatted = format_city_names_typeahead(cities);
       // use process var to async return results
       return process(cities_formatted);
-    }, 500);
-
+    }
     return;
   },
+  displayText: function (item) {
+    return `${item.cityName} ${item.airportName} (${item.iataCode})`;
+  },
+  afterSelect: function(item){
+    $("#destination_iataCode").val(item.iataCode);
+  },
+  autoSelect: true,
+  delay: 500, // Wait 500ms before calling search_matching_cities
 });
 
 $("#oneWayFlight").on("change", function () {
@@ -66,7 +76,11 @@ function format_city_names_typeahead(results) {
       .map((item) => {
         //if item is AIRPORT
         if (item.subType == "AIRPORT") {
-          return `${item.address.cityName} (${item.iataCode})`;
+          return {
+            cityName: item.address.cityName,
+            iataCode: item.iataCode,
+            airportName: item.name,
+          };
         }
       })
       .filter((item) => {

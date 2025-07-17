@@ -2,21 +2,15 @@ import express from "express";
 import path from "path";
 import url from "url";
 import bodyParser from "body-parser";
-import amadeus from "amadeus";
-import { format_flight_form_request } from "./api_helpers.js";
-import fs from "fs";
+
+import { search_cities_airports } from "./src/amadeus_api.js";
+
 
 const app = express();
 const port = 3000;
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const API_KEY = process.env.AMADEUS_API_KEY;
-const AIP_SECRET = process.env.AMADEUS_API_SECRET;
 
-const amadeus_api = new amadeus({
-  clientId: `${API_KEY}`,
-  clientSecret: `${AIP_SECRET}`,
-});
 
 // The following is an example of how to search for flights:
 // https://github.com/amadeus4dev/amadeus-code-examples
@@ -51,8 +45,8 @@ app.get("/flights", (req, res) => {
   const now = new Date();
   const start = res.render("flights.ejs", {
     todayDate: now.toISOString().split("T")[0],
-    flightDepartureDate: now.toISOString().split("T")[0],
-    flightReturnDate: now.toISOString().split("T")[0],
+    originFlightDepartureDate: now.toISOString().split("T")[0],
+    departureFlightReturnDate: now.toISOString().split("T")[0],
   });
 });
 
@@ -60,11 +54,8 @@ app.get('/search/cityairports', async (req, res) => {
 
   try {
     //Which cities or airports with req.query.name
-    const response = await amadeus_api.referenceData.locations.get({
-      keyword: req.query.name,
-      subType: amadeus.location.any,
-    });
-      return res.json(response.data);
+    const response = await search_cities_airports(req.query.name);
+    return res.json(response.data);
   } catch (error) {
     console.log(error);
     return res.status(500).send(error.message);
@@ -72,6 +63,65 @@ app.get('/search/cityairports', async (req, res) => {
 });
 
 app.post("/search_for_flights", async (req, res) => {
+  const now = new Date();
+  var todayDate = now.toISOString().split("T")[0];
+  var oneWayIsChecked;
+  var returnDate;
+  if(req.body.one_way == undefined){
+    oneWayIsChecked = false;
+    returnDate = req.body.departureFlightReturnDate;
+
+  }else{
+    oneWayIsChecked = true;
+    returnDate = todayDate;
+  }
+
+  var flight_data = {
+    oneWayIsChecked: oneWayIsChecked,
+    originAirportName: req.body.originAirportName,
+    originAirportIataCode: req.body.originAirportIataCode,
+    originFlightDepartureDate: req.body.originFlightDepartureDate,
+    destinationAirportName: req.body.destinationAirportName,
+    destinationAirportIataCode: req.body.destinationAirportIataCode,
+    departureFlightReturnDate: returnDate,
+    todayDate: todayDate,
+  }
+
+  // validate airports if the iataCode was not provided
+  var valid_origin = false;
+  var valid_destination = false;
+  if(flight_data.originAirportIataCode == ""){
+    var origin_iataCode = await validate_airport_search(flight_data.originAirportName);
+    if(origin_iataCode != undefined){
+      flight_data.originAirportIataCode = origin_iataCode;
+      valid_origin = true;
+    }
+  }else{
+    valid_origin = await validate_iataCode(flight_data.originAirportIataCode);
+  }
+
+  if(flight_data.destinationAirportIataCode == ""){
+    var destination_iataCode = await validate_airport_search(flight_data.destinationAirportName);
+    if(destination_iataCode != undefined){
+      flight_data.destinationAirportIataCode = destination_iataCode;
+      valid_destination = true;
+    }
+  }else{
+    valid_destination = await validate_iataCode(flight_data.destinationAirportIataCode);
+  }
+
+  if(!valid_origin ||!valid_destination ){
+      var info = "Could not find airport or city. Please enter valid airport location or code."
+      return res.render("flights.ejs", {
+        todayDate: now.toISOString().split("T")[0],
+        originFlightDepartureDate: now.toISOString().split("T")[0],
+        departureFlightReturnDate: now.toISOString().split("T")[0],
+        info_message: info,
+      });
+  }
+
+  // 
+
   // 1: format data into object
   // 2: send request to api
   // 3: include response in render
@@ -81,29 +131,7 @@ app.post("/search_for_flights", async (req, res) => {
   // 2: User selects flight
   // 3: results for  destination -> origin
 
-  
-  //var data = format_flight_form_request(req);
-  //try {
-  //   const response =
-  //     await amadeus_api.shopping.flightOffersSearch.post(data);
-  //   //console.log(response.data);
-  //   // const jsonString = JSON.stringify(response.data, null, 2);
-  //   // fs.writeFile("./flightdata.json", jsonString, (err) => {
-  //   //   if (err) {
-  //   //     console.error('Error writing file:', err);
-  //   //   } else {
-  //   //     console.log(`Dictionary successfully written to ${filePath} as JSON.`);
-  //   //   }
-  //   // });
-  // } catch (error) {
-  //   console.error(error);
-  // }
-  const now = new Date();
-  res.render("flights.ejs", {
-    todayDate: req.body.todayDate,
-    flightDepartureDate: req.body.flightDepartureDate,
-    flightReturnDate: req.body.flightReturnDate,
-  });
+  res.render("flight_search_results.ejs", flight_data);
 });
 
 app.get("/hotels", (req, res) => {
@@ -128,3 +156,50 @@ app.post("/search_for_hotels", async (req, res) => {
 app.listen(port, () => {
   console.log(`app started on port ${port}`);
 });
+
+async function validate_airport_search(user_search){
+  // return the first matching code
+  // this would return an iataCode
+
+  try{
+    // TODO: we could also check for the text value they entered. 
+    // city_name: los angles 
+    let response = await search_cities_airports(user_search);
+    if(response.data.length <= 0){
+      return undefined;
+    }else{
+
+      for(var i  = 0; i < response.data.length; ++i){
+        if(response.data[i].subType == "AIRPORT"){
+          return response.data[i].iataCode;
+        }
+      }
+      return undefined;
+    }
+  }catch (error){
+    return error;
+  }
+}
+
+
+async function validate_iataCode(iataCode){
+
+  try{
+    // TODO: we could also check for the text value they entered. 
+    // city_name: los angles 
+    let response = await search_cities_airports(iataCode);
+    if(response.data.length <= 0){
+      return false
+    }else{
+
+      for(var i  = 0; i < response.data.length; ++i){
+        if(response.data[i].iataCode == iataCode){
+          return true;
+        }
+      }
+      return false
+    }
+  }catch (error){
+    return error;
+  }
+}

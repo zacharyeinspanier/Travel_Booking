@@ -1,0 +1,44 @@
+
+<!--  travelers 
+
+
+-->
+<form class="p-5" action="/search_for_flights" method="POST">
+
+    <!-- Check box for One Way Flights-->
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="oneWayFlight" name="one_way" <%= locals.oneWayIsChecked ? 'checked' : '' %> >
+            <label class="form-check-label" for="oneWayFlight">One Way</label>
+        </div>
+    </div>
+
+    <!-- Row for origin flight location and date-->
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="flightOriginInput">Origin</label>
+            <input type="text" class="form-control typeahead" id="flightOriginInput" data-provide="typeahead"  placeholder="Origin" name="originAirportName"  value=<%= locals.originAirportName %>  >
+            <input type="hidden" id="origin_iataCode" name="originAirportIataCode" value=<%= locals.originAirportIataCode %>>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Start Date</label>
+            <input type="date" class="form-control" id="flightDepartureDate" name="originFlightDepartureDate" value=<%= locals.originFlightDepartureDate %>  min= <%= locals.todayDate %> />
+        </div>
+ 
+    </div>
+
+    <!-- Row for destination location and date -->
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label class="col-form-label">Destination</label>
+            <input type="text" class="form-control" id="flightDestinationInput"  placeholder="Destination" name="destinationAirportName" value=<%= locals.destinationAirportName %> >
+            <input type="hidden" id="destination_iataCode" name="destinationAirportIataCode" value=<%= locals.destinationAirportIataCode %>>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="flightReturnDate">Return Date</label>
+            <input type="date" class="form-control" id="flightReturnDate" name="departureFlightReturnDate" value=<%= locals.departureFlightReturnDate %>  min= <%= locals.todayDate %> <%= locals.oneWayIsChecked ? 'disabled' : '' %> />
+        </div>
+    </div>
+    
+    <input class="btn btn-primary float-right" type="Submit" value="Search"/>
+</form>

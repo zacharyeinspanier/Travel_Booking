@@ -11,12 +11,21 @@ The Amadeus Flight Availabilities Search API provides a list of flights with sea
 
 
 TODO:
-    
-    2: search bar matches cities from entered name
-    3: validate origin and destination match airport codes
+    3: organize app
     4: validate dates before querying api
+        - ensure dates are not bebrore todays dates
+    5: add time rage to search
     5: add traveler data to from
-    6: filter api data
+    6: filter api data to be nessary data to display for search results
     7: disaply api data in list
-    8: style web page
-    9: if no api key is prodived, start the app without it, and create some example data
+    8: style web page, use bootstrap
+
+    9: if no api key is prodived, start the app without it, and create some sample data
+    10: cache the result of api requests
+
+        4: DONE ensure, when page is posted all the data is sent back to the page
+        - SHould I return a new web-page specifically for search results?
+        2: DONE: search bar matches cities from entered name
+        3:DONE validate origin and destination match airport codes
+        - inform user if query does not match an existing city or airport
+        3: TEST: What if the locations are changed, will the code be updated?
