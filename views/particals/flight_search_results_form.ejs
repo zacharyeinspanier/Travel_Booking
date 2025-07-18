@@ -15,28 +15,68 @@
 
     <!-- Row for origin flight location and date-->
     <div class="form-row">
-        <div class="form-group col-md-6">
+
+        <div class="form-group col-md-4">
             <label for="flightOriginInput">Origin</label>
             <input type="text" class="form-control typeahead" id="flightOriginInput" data-provide="typeahead"  placeholder="Origin" name="originAirportName"  value=<%= locals.originAirportName %>  >
             <input type="hidden" id="origin_iataCode" name="originAirportIataCode" value=<%= locals.originAirportIataCode %>>
         </div>
-        <div class="form-group col-md-6">
+
+        <div class="form-group col-md-4">
             <label>Start Date</label>
             <input type="date" class="form-control" id="flightDepartureDate" name="originFlightDepartureDate" value=<%= locals.originFlightDepartureDate %>  min= <%= locals.todayDate %> />
+        </div>
+
+        <div class="form-group col-md-4">
+            <label for="originTime">Origin Flight Time</label>
+            <select name="originFlightTime" id="originTime" class="form-control">
+                <option value="06:00:00"  <%= locals.originFlightTime == "06:00:00" ? 'selected' : '' %>>6AM-8AM</option>
+                <option value="08:00:00"  <%= locals.originFlightTime == "08:00:00" ? 'selected' : '' %>>8AM-10AM</option>
+                <option value="10:00:00"  <%= locals.originFlightTime == "10:00:00" ? 'selected' : '' %>>10AM-12PM</option>
+                <option value="12:00:00"  <%= locals.originFlightTime == "12:00:00" ? 'selected' : '' %>>12PM-2PM</option>
+                <option value="14:00:00"  <%= locals.originFlightTime == "14:00:00" ? 'selected' : '' %>>2PM-4PM</option>
+                <option value="16:00:00" <%= locals.originFlightTime == "16:00:00" ? 'selected' : '' %>>4PM-6PM</option>
+                <option value="18:00:00"  <%= locals.originFlightTime == "18:00:00" ? 'selected' : '' %>>6PM-8PM</option>
+                <option value="20:00:00" <%= locals.originFlightTime == "20:00:00" ? 'selected' : '' %>>10PM-12AM</option>
+                <option value="00:00:00" <%= locals.originFlightTime == "00:00:00" ? 'selected' : '' %>>12AM-2AM</option>
+                <option value="02:00:00" <%= locals.originFlightTime == "02:00:00" ? 'selected' : '' %>>2AM-4AM</option>
+                <option value="04:00:00" <%= locals.originFlightTime == "04:00:00" ? 'selected' : '' %>>4AM-6AM</option>
+                <option value="all_day" <%= locals.originAllDayTimeRange ? 'selected' : ''%>>All Day</option>
+            </select>
         </div>
  
     </div>
 
     <!-- Row for destination location and date -->
     <div class="form-row">
-        <div class="form-group col-md-6">
+
+        <div class="form-group col-md-4">
             <label class="col-form-label">Destination</label>
             <input type="text" class="form-control" id="flightDestinationInput"  placeholder="Destination" name="destinationAirportName" value=<%= locals.destinationAirportName %> >
             <input type="hidden" id="destination_iataCode" name="destinationAirportIataCode" value=<%= locals.destinationAirportIataCode %>>
         </div>
-        <div class="form-group col-md-6">
+
+        <div class="form-group col-md-4">
             <label for="flightReturnDate">Return Date</label>
             <input type="date" class="form-control" id="flightReturnDate" name="departureFlightReturnDate" value=<%= locals.departureFlightReturnDate %>  min= <%= locals.todayDate %> <%= locals.oneWayIsChecked ? 'disabled' : '' %> />
+        </div>
+        <%= locals.departureFlightTime == "06:00:00" ? 'selected' : '' %>
+        <div class="form-group col-md-4">
+            <label for="departureTime">Return Flight Time</label>
+            <select name="departureFlightTime" id="departureTime" class="form-control" <%= locals.oneWayIsChecked ? 'disabled' : '' %> >
+                <option value="06:00:00"  <%= locals.departureFlightTime == "06:00:00" ? 'selected' : '' %>>6AM-8AM</option>
+                <option value="08:00:00"  <%= locals.departureFlightTime == "08:00:00" ? 'selected' : '' %>>8AM-10AM</option>
+                <option value="10:00:00"  <%= locals.departureFlightTime == "10:00:00" ? 'selected' : '' %>>10AM-12PM</option>
+                <option value="12:00:00"  <%= locals.departureFlightTime == "12:00:00" ? 'selected' : '' %>>12PM-2PM</option>
+                <option value="14:00:00"  <%= locals.departureFlightTime == "14:00:00" ? 'selected' : '' %>>2PM-4PM</option>
+                <option value="16:00:00" <%= locals.departureFlightTime == "16:00:00" ? 'selected' : '' %>>4PM-6PM</option>
+                <option value="18:00:00"  <%= locals.departureFlightTime == "18:00:00" ? 'selected' : '' %>>6PM-8PM</option>
+                <option value="20:00:00" <%= locals.departureFlightTime == "20:00:00" ? 'selected' : '' %>>10PM-12AM</option>
+                <option value="00:00:00" <%= locals.departureFlightTime == "00:00:00" ? 'selected' : '' %>>12AM-2AM</option>
+                <option value="02:00:00" <%= locals.departureFlightTime == "02:00:00" ? 'selected' : '' %>>2AM-4AM</option>
+                <option value="04:00:00" <%= locals.departureFlightTime == "04:00:00" ? 'selected' : '' %>>4AM-6AM</option>
+                <option value="all_day" <%= locals.departueAllDayTimeRange ? 'selected' : ''%>>All Day</option>
+            </select>
         </div>
     </div>
     

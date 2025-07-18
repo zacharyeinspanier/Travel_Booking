@@ -1,3 +1,5 @@
+// TODO: this JS file is only for flight searches
+var passengerNumber = 0;
 
 // Bootstrap TypeAhead is used for search bar auto completes
 // An async function is use as the source
@@ -47,9 +49,38 @@ $("#flightDestinationInput").typeahead({
 $("#oneWayFlight").on("change", function () {
   if ($("#oneWayFlight").is(":checked")) {
     $("#flightReturnDate").prop("disabled", true);
+    $("#departureTime").prop("disabled", true);
   } else {
     $("#flightReturnDate").prop("disabled", false);
+    $("#departureTime").prop("disabled", false);
   }
+});
+
+$("#addPassengerFlightBtn").on('click', function(){
+    var list_continer = $("#passengerFlightSelectContainer");
+    var passenger_list_item = $(`<li class="list-group-item" ></li>`);
+    var passenger_label = $(`<label>Passenger</label>`);
+
+    var passengerSelectElement = $(`<select class="form-control form-select" name="passenger_${passengerNumber}"></select>`);
+    var option2 = $("<option></option>").val("SEATED_INFANT").text("Seated Infant");
+    var option3 = $("<option></option>").val("CHILD").text("Child");
+    var option4 = $("<option></option>").val("YOUNG").text("Young");
+    var option5 = $("<option></option>").val("STUDENT").text("Student");
+    var option6 = $("<option></option>").val("ADULT").text("Adult");
+    var option7 = $("<option></option>").val("SENIOR").text("Senior");
+    var option7 = $("<option selected hidden></option>").val("NONE").text("Select a Passenger");
+    passengerSelectElement.append(option2, option3, option4, option5, option6, option7);
+
+    var passenger_remove_btn = $(`<button type="button" class="form-control btn-outline-secondary"></button>`).text("Remove Passenger");
+    passenger_remove_btn.on("click", function(){
+        $(this).parent().remove();
+    });
+
+    passenger_list_item.append(passenger_label);
+    passenger_list_item.append(passengerSelectElement);
+    passenger_list_item.append(passenger_remove_btn);
+    list_continer.append(passenger_list_item);
+    passengerNumber++;
 });
 
 async function search_matching_cities(city_name) {

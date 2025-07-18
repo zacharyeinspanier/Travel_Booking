@@ -19,9 +19,10 @@ TODO:
     6: filter api data to be nessary data to display for search results
     7: disaply api data in list
     8: style web page, use bootstrap
-
     9: if no api key is prodived, start the app without it, and create some sample data
     10: cache the result of api requests
+    11:  if HELD_INFANT, must provide the id of the passanger holding infant.    
+        var option1 = $("<option></option>").val("HELD_INFANT").text("Held Infant");
 
         4: DONE ensure, when page is posted all the data is sent back to the page
         - SHould I return a new web-page specifically for search results?
@@ -29,3 +30,22 @@ TODO:
         3:DONE validate origin and destination match airport codes
         - inform user if query does not match an existing city or airport
         3: TEST: What if the locations are changed, will the code be updated?
+
+Traveler type CHILD < 12y, HELD_INFANT < 2y, SEATED_INFANT < 2y, SENIOR >=60y
+
+
+one passenger by default
+button "add passenger"
+if(passangers > 1) display remove passenger
+selection 
+have a var passengers which is a list
+type="HELD_INFANT", corresponds to the adult travelers's id who will share the seat
+<select name="passenger" id="passenger">
+  <option value="HELD_INFANT">Held Infant</option> 
+  <option value="SEATED_INFANT">Seated Infant</option>
+  <option value="CHILD">Child</option>
+  <option value="YOUNG">Young</option>
+  <option value="STUDENT">Student</option>
+  <option value="ADULT">Adult</option>
+  <option value="SENIOR">Senior</option>
+</select>
