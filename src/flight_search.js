@@ -42,19 +42,20 @@ export class flight_search_data {
       departueAllDayTimeRange = false;
     }
 
-    // Extract passengers and set id. 
+    // Extract passengers and set id.
     var passengers = [];
-    const passengerKeys = Object.keys(flight_form_data).filter(key => key.startsWith('passenger_'));
-    if(passengerKeys.length != 0 ){
-        passengerKeys.forEach((key, index) => {
-            passengers.push({
-                id: index,
-                travelerType: flight_form_data[key],
-            });
+    const passengerKeys = Object.keys(flight_form_data).filter((key) =>
+      key.startsWith("passenger_")
+    );
+    if (passengerKeys.length != 0) {
+      passengerKeys.forEach((key, index) => {
+        passengers.push({
+          id: index,
+          travelerType: flight_form_data[key],
         });
-    }
-    else{
-        passengers = undefined;
+      });
+    } else {
+      passengers = undefined;
     }
 
     // Form Data
@@ -80,7 +81,7 @@ export class flight_search_data {
     this.valid_destination =
       flight_form_data.destinationAirportIataCode == "" ? false : true;
 
-    this.flight_passengers = passengers
+    this.flight_passengers = passengers;
   }
 
   get_flight_form_data() {
@@ -102,40 +103,47 @@ export class flight_search_data {
       departureFlightTime: this.departureFlightTime,
       departureTimeRange: this.departureTimeRange,
       departueAllDayTimeRange: this.departueAllDayTimeRange,
-      flight_passengers: flight_passengers.passengers
+
     };
   }
 
-  static get_flight_form_defaults(info){
+  static get_flight_form_defaults(info) {
     const now = new Date();
     var todaysDate = now.toISOString().split("T")[0];
     return {
-        oneWayIsChecked: '',
-        todayDate: todaysDate,
-        originAirportName: '',
-        originAirportIataCode: '',
-        originFlightDepartureDate: todaysDate,
-        originAllDayTimeRange: true,
-        destinationAirportName: '',
-        destinationAirportIataCode: '',
-        departureFlightReturnDate: todaysDate,
-        departueAllDayTimeRange: true,
-        info_message: info,
-        flight_passengers: [
-            {
-                id: "1",
-                travelerType: "YOUNG",
-            },
-            {
-                id: "2",
-                travelerType: "ADULT",
-            },
-            {
-                id: "3",
-                travelerType: "SNEIOR",
-            },
-        ]
-    }
+      oneWayIsChecked: "",
+      todayDate: todaysDate,
+      originAirportName: "",
+      originAirportIataCode: "",
+      originFlightDepartureDate: todaysDate,
+      originAllDayTimeRange: true,
+      destinationAirportName: "",
+      destinationAirportIataCode: "",
+      departureFlightReturnDate: todaysDate,
+      departueAllDayTimeRange: true,
+      info_message: info,
+    };
+  }
+
+  get_flight_passengers(){
+    return this.flight_passengers;
+  }
+
+  static get_default_passengers() {
+    return [
+      {
+        id: "1",
+        travelerType: "YOUNG",
+      },
+      {
+        id: "2",
+        travelerType: "ADULT",
+      },
+      {
+        id: "3",
+        travelerType: "SNEIOR",
+      },
+    ];
   }
 
   get_flight_data_amadeus() {
@@ -147,51 +155,53 @@ export class flight_search_data {
     flight_search_req_data["originDestinations"] = [];
     flight_search_req_data["travelers"] = [];
 
-    if(this.oneWayIsChecked){
-        var flight_data = {
-            id: "1",
-            originLocationCode: this.originAirportIataCode,
-            destinationLocationCode: this.destinationAirportIataCode,
-            departureDateTimeRange: {
-                date: this.originFlightDepartureDate,
-                time: this.originFlightTime,
-                timeWindow: this.originTimeRange
-            },
-        };
-        flight_search_req_data["originDestinations"].push(flight_data);
-    }else{
-        var flight_data_origin = {
-            id: "1",
-            originLocationCode: this.originAirportIataCode,
-            destinationLocationCode: this.destinationAirportIataCode,
-            departureDateTimeRange: {
-                date: this.originFlightDepartureDate,
-                time: this.originFlightTime,
-                timeWindow: this.originTimeRange
-            },
-        };
+    if (this.oneWayIsChecked) {
+      var flight_data = {
+        id: "1",
+        originLocationCode: this.originAirportIataCode,
+        destinationLocationCode: this.destinationAirportIataCode,
+        departureDateTimeRange: {
+          date: this.originFlightDepartureDate,
+          time: this.originFlightTime,
+          timeWindow: this.originTimeRange,
+        },
+      };
+      flight_search_req_data["originDestinations"].push(flight_data);
+    } else {
+      var flight_data_origin = {
+        id: "1",
+        originLocationCode: this.originAirportIataCode,
+        destinationLocationCode: this.destinationAirportIataCode,
+        departureDateTimeRange: {
+          date: this.originFlightDepartureDate,
+          time: this.originFlightTime,
+          timeWindow: this.originTimeRange,
+        },
+      };
 
-        var flight_data_destination = {
-            id: "2",
-            originLocationCode: this.destinationAirportIataCode,
-            destinationLocationCode: this.originAirportIataCode,
-            departureDateTimeRange: {
-                date: this.departureFlightReturnDate,
-                time: this.departureFlightTime,
-                timeWindow: this.departureTimeRange
-            },
-        };
-        flight_search_req_data["originDestinations"].push(flight_data_origin);
-        flight_search_req_data["originDestinations"].push(flight_data_destination);
+      var flight_data_destination = {
+        id: "2",
+        originLocationCode: this.destinationAirportIataCode,
+        destinationLocationCode: this.originAirportIataCode,
+        departureDateTimeRange: {
+          date: this.departureFlightReturnDate,
+          time: this.departureFlightTime,
+          timeWindow: this.departureTimeRange,
+        },
+      };
+      flight_search_req_data["originDestinations"].push(flight_data_origin);
+      flight_search_req_data["originDestinations"].push(
+        flight_data_destination
+      );
     }
 
-    for(var i = 0; i < this.flight_passengers.length; ++i){
-        var passenger = {
-            id: this.flight_passengers[i].id.toString(),
-            travelerType: this.flight_passengers[i].travelerType,
-            fareOptions: ["STANDARD"]
-        }
-        flight_search_req_data["travelers"].push(passenger);
+    for (var i = 0; i < this.flight_passengers.length; ++i) {
+      var passenger = {
+        id: this.flight_passengers[i].id.toString(),
+        travelerType: this.flight_passengers[i].travelerType,
+        fareOptions: ["STANDARD"],
+      };
+      flight_search_req_data["travelers"].push(passenger);
     }
 
     return flight_search_req_data;

@@ -8,4 +8,13 @@ export async function fetch_city_airports(city_name) {
     } catch (error) {
       console.log(error);
     }
+}
+
+export async function fetch_passengers() {
+  try {
+    const passengers = await fetch("/fetch/passengers");
+    return passengers;
+  } catch (error) {
+    console.log(error);
   }
+}

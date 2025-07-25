@@ -4,7 +4,7 @@ import url from "url";
 import bodyParser from "body-parser";
 import { flight_search_data } from "./src/flight_search.js";
 import { search_cities_airports } from "./src/amadeus_api.js";
-import * as helpers from "./utils/ejs_flight_form_helpers.js"
+import * as helpers from "./utils/ejs_helpers.js"
 
 const app = express();
 const port = 3000;
@@ -15,6 +15,19 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "public")));
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
+
+let flight_data;
+
+// store flight here
+// How will patch work?
+// could use a update button
+
+// if the user has submitted a POST request
+// they are allowed to update their search critera
+// PATCH will be able to do this
+// However it will still be necessary to re-run the search
+
+// The other option would be to garbage collect flight data every time the user presses search
 
 app.get("/", (req, res) => {
   res.render("index.ejs");
@@ -34,7 +47,6 @@ app.get("/flights", (req, res) => {
 app.get('/search/cityairports', async (req, res) => {
   try {
     //Which cities or airports with req.query.name
-    console.log(req.query.name);
     const response = await search_cities_airports(req.query.name);
     return res.json(response.data);
   } catch (error) {
@@ -42,11 +54,29 @@ app.get('/search/cityairports', async (req, res) => {
   }
 });
 
+app.get('/fetch/passengers',  (req, res) => {
+  if(flight_data){
+    const data = {
+      passengers: flight_data.get_flight_passengers(),
+      passenger_data_retrieved: true,
+    };
+    res.status(200).json(data);
+
+  }else{
+    const data = {
+      passengers: [],
+      passenger_data_retrieved: false
+    };
+    res.status(200).json(data);
+  }
+  
+});
+
 app.post("/search_for_flights", async (req, res) => {
   const now = new Date();
   var todayDate = now.toISOString().split("T")[0];
-
-  const flight_data = new flight_search_data(req.body, todayDate);
+  flight_data = undefined;
+  flight_data = new flight_search_data(req.body, todayDate);
 
   if(flight_data.flight_passengers == undefined){
     var info = "Please one or more add a passengers to this search."

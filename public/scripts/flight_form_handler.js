@@ -1,6 +1,5 @@
 
 export function one_way_changed(){
-    console.log("one way");
     if($(this).is(":checked")){
         $("#flightReturnDate").prop("disabled", true);
         $("#departureTime").prop("disabled", true);
@@ -10,12 +9,20 @@ export function one_way_changed(){
     }
 }
 
-export function add_new_passenger(passenger_number){
-    var list_continer = $("#passengerFlightSelectContainer");
+export function add_new_passenger(passenger_number, list_continer){
     var new_passenger = create_passenger_elements("NONE", passenger_number);
     list_continer.append(new_passenger);
     ++passenger_number;
     return passenger_number;
+}
+
+export function add_passengers_from_list(passengers, passenger_number, list_continer){
+    for(var i = 0; i < passengers.length; ++i){
+        var new_passenger = create_passenger_elements(passengers[i].travelerType, passenger_number);
+        list_continer.append(new_passenger);
+        ++passenger_number;
+    }
+    return passenger_number
 }
 function create_passenger_elements(selected_option, passenger_number){
     // Elements
