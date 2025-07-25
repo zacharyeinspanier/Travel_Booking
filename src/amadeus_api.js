@@ -1,5 +1,7 @@
 import amadeus from "amadeus";
 
+// https://github.com/amadeus4dev/amadeus-code-examples
+
 const amadeus_api = new amadeus({
     clientId: `${process.env.AMADEUS_API_KEY}`,
     clientSecret: `${process.env.AMADEUS_API_SECRET}`,

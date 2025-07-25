@@ -12,10 +12,13 @@ The Amadeus Flight Availabilities Search API provides a list of flights with sea
 
 TODO:
     3: organize app
+        3.a: DONE remove one flight from
+        3.b: change the way flight data is set; format data in the same way as amadeus
+        3.c: 
+    4: send passenger data to font end
+    4: diable submit button if required data is not entered. 
     4: validate dates before querying api
         - ensure dates are not bebrore todays dates
-    5: add time rage to search
-    5: add traveler data to from
     6: filter api data to be nessary data to display for search results
     7: disaply api data in list
     8: style web page, use bootstrap
@@ -30,8 +33,23 @@ TODO:
         3:DONE validate origin and destination match airport codes
         - inform user if query does not match an existing city or airport
         3: TEST: What if the locations are changed, will the code be updated?
+        5: DONE add time rage to search
+        5: DONE add traveler data to from
 
-Traveler type CHILD < 12y, HELD_INFANT < 2y, SEATED_INFANT < 2y, SENIOR >=60y
+
+
+locals.oneWayIsChecked
+locals.todayDate
+
+locals.originAirportName
+locals.originAirportIataCode
+originFlightDepartureDate
+locals.originFlightTime
+
+locals.destinationAirportName
+locals.destinationAirportIataCode
+locals.departureFlightReturnDate
+locals.departureFlightTime 
 
 
 one passenger by default

@@ -1,9 +1,13 @@
 <%- include("particals/header.ejs") %>
 
-<%- include("particals/flight_landing_page_form.ejs") %>
+    <%- include("particals/flight_search_form.ejs") %>
 
-<% if(locals.info_message) {%>
-    <p style="color:red;"><%= locals.info_message %></p>
-<%}%>
- 
-<%- include("particals/footer.ejs") %>
+        <div id="errorMessageContainer">
+            <% if(locals.info_message) {%>
+                <p style="color:red;">
+                    <%= locals.info_message %>
+                </p>
+                <%}%>
+        </div>
+
+        <%- include("particals/footer.ejs") %>

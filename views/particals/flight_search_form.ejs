@@ -1,8 +1,5 @@
 
-<!--  travelers 
 
-
--->
 <form class="p-5" action="/search_for_flights" method="POST">
 
     <!-- Check box for One Way Flights-->
@@ -60,7 +57,6 @@
             <label for="flightReturnDate">Return Date</label>
             <input type="date" class="form-control" id="flightReturnDate" name="departureFlightReturnDate" value=<%= locals.departureFlightReturnDate %>  min= <%= locals.todayDate %> <%= locals.oneWayIsChecked ? 'disabled' : '' %> />
         </div>
-        <%= locals.departureFlightTime == "06:00:00" ? 'selected' : '' %>
         <div class="form-group col-md-4">
             <label for="departureTime">Return Flight Time</label>
             <select name="departureFlightTime" id="departureTime" class="form-control" <%= locals.oneWayIsChecked ? 'disabled' : '' %> >
@@ -79,6 +75,27 @@
             </select>
         </div>
     </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4" > 
+            <ul class="list-group" id="passengerFlightSelectContainer">
+            </ul>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4" id="passengerFlightAddRemoveBtnContainer">
+            <button id="addPassengerFlightBtn" type="button" class="form-control btn-outline-primary">Add a Passenger</button>
+        </div>
+    </div>
     
     <input class="btn btn-primary float-right" type="Submit" value="Search"/>
 </form>
+
+<script>
+
+
+// then from here wait until the document is loaded and call function
+
+</script>
+
+

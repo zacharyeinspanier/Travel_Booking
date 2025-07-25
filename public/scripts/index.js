@@ -1,24 +1,35 @@
 // TODO: this JS file is only for flight searches
-var passengerNumber = 0;
+import {
+  one_way_changed,
+  add_new_passenger,
+  format_city_names_typeahead,
+} from "/scripts/flight_form_handler.js";
+import { fetch_city_airports } from "/scripts/server_requests.js";
+
+var passenger_number = 0;
+
+$("#oneWayFlight").on("change", one_way_changed);
+$("#addPassengerFlightBtn").on("click", function () {
+  passenger_number = add_new_passenger(passenger_number);
+  console.log(passenger_number);
+});
 
 // Bootstrap TypeAhead is used for search bar auto completes
 // An async function is use as the source
 // Link to documentation: https://github.com/bassjobsen/Bootstrap-3-Typeahead
 $("#flightOriginInput").typeahead({
   source: async function (query, process) {
-    $("#origin_iataCode").val(""); // clear previous iataCode 
-    var cities = await search_matching_cities(query);
-    if (cities) {
-      var cities_formatted = format_city_names_typeahead(cities);
-      // use process var to async return results
-      return process(cities_formatted);
+    $("#origin_iataCode").val(""); // clear previous iataCode
+    var search_results = await search_matching_cities(query);
+    if (search_results) {
+      return process(search_results);
     }
     return;
   },
   displayText: function (item) {
     return `${item.cityName} ${item.airportName} (${item.iataCode})`;
   },
-  afterSelect: function(item){
+  afterSelect: function (item) {
     $("#origin_iataCode").val(item.iataCode);
   },
   autoSelect: true,
@@ -27,102 +38,49 @@ $("#flightOriginInput").typeahead({
 
 $("#flightDestinationInput").typeahead({
   source: async function (query, process) {
-    $("#destination_iataCode").val(""); // clear previous iataCode 
-    var cities = await search_matching_cities(query);
-    if (cities) {
-      var cities_formatted = format_city_names_typeahead(cities);
-      // use process var to async return results
-      return process(cities_formatted);
+    $("#destination_iataCode").val(""); // clear previous iataCode
+    var search_results = await search_matching_cities(query);
+    if (search_results) {
+      return process(search_results);
     }
     return;
   },
   displayText: function (item) {
     return `${item.cityName} ${item.airportName} (${item.iataCode})`;
   },
-  afterSelect: function(item){
+  afterSelect: function (item) {
     $("#destination_iataCode").val(item.iataCode);
   },
   autoSelect: true,
   delay: 500, // Wait 500ms before calling search_matching_cities
 });
 
-$("#oneWayFlight").on("change", function () {
-  if ($("#oneWayFlight").is(":checked")) {
-    $("#flightReturnDate").prop("disabled", true);
-    $("#departureTime").prop("disabled", true);
-  } else {
-    $("#flightReturnDate").prop("disabled", false);
-    $("#departureTime").prop("disabled", false);
+async function search_matching_cities(query) {
+  const matching_city_airports = await fetch_city_airports(query);
+  // Inform user of error
+  if (!matching_city_airports.ok) {
+    $("#errorMessageContainer").empty();
+    var error_message = $(`<p style="color:red;"></p>`).text(
+      `Could not complete search: ${matching_city_airports.status} ${matching_city_airports.statusText}`
+    );
+    $("#errorMessageContainer").append(error_message);
+    return;
   }
-});
-
-$("#addPassengerFlightBtn").on('click', function(){
-    var list_continer = $("#passengerFlightSelectContainer");
-    var passenger_list_item = $(`<li class="list-group-item" ></li>`);
-    var passenger_label = $(`<label>Passenger</label>`);
-
-    var passengerSelectElement = $(`<select class="form-control form-select" name="passenger_${passengerNumber}"></select>`);
-    var option2 = $("<option></option>").val("SEATED_INFANT").text("Seated Infant");
-    var option3 = $("<option></option>").val("CHILD").text("Child");
-    var option4 = $("<option></option>").val("YOUNG").text("Young");
-    var option5 = $("<option></option>").val("STUDENT").text("Student");
-    var option6 = $("<option></option>").val("ADULT").text("Adult");
-    var option7 = $("<option></option>").val("SENIOR").text("Senior");
-    var option7 = $("<option selected hidden></option>").val("NONE").text("Select a Passenger");
-    passengerSelectElement.append(option2, option3, option4, option5, option6, option7);
-
-    var passenger_remove_btn = $(`<button type="button" class="form-control btn-outline-secondary"></button>`).text("Remove Passenger");
-    passenger_remove_btn.on("click", function(){
-        $(this).parent().remove();
-    });
-
-    passenger_list_item.append(passenger_label);
-    passenger_list_item.append(passengerSelectElement);
-    passenger_list_item.append(passenger_remove_btn);
-    list_continer.append(passenger_list_item);
-    passengerNumber++;
-});
-
-async function search_matching_cities(city_name) {
-  const params = new URLSearchParams();
-  params.append("name", city_name);
-
-  try {
-    const matching_city_names = await fetch(`/search/cityairports?${params}`);
-
-    if (!matching_city_names.ok) {
-      throw new Error(`Response status: ${matching_city_names.status}`);
-    }
-
-    const data = await matching_city_names.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
+  const data = await matching_city_airports.json();
+  return format_city_names_typeahead(data);
 }
 
-function format_city_names_typeahead(results) {
-  if (results) {
-    const content = results
-      .map((item) => {
-        //if item is AIRPORT
-        if (item.subType == "AIRPORT") {
-          return {
-            cityName: item.address.cityName,
-            iataCode: item.iataCode,
-            airportName: item.name,
-          };
-        }
-      })
-      .filter((item) => {
-        // map introduces undefined values if nothing is retured
-        // filter undefined values
-        if (item != undefined) {
-          return true;
-        }
-        return false;
-      });
-    return content;
-  }
-  return [];
-}
+document.addEventListener('DOMContentLoaded', function() {
+    //init(); // Call your initialization function here
+});
+
+
+
+// create an init
+// cache selectors in init
+// take all on functions and declare them in another file
+// import functions and create the on click event in init
+// store the current flight search on the server
+// use patch to update the flight search on the server
+// use 'this' when in an onclick function
+// idea: request passenger data from back end after document is loaded
